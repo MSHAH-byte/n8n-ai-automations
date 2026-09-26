@@ -1,0 +1,65 @@
+# Environment variables and secrets
+
+.env
+.env.*
+!.env.example
+
+# Credentials and private keys
+
+credentials.json
+*credentials*.json
+client_secret*.json
+*.pem
+*.key
+
+# Local n8n data / configuration
+
+.n8n/
+n8n_data/
+
+# Local n8n exports and configuration files
+
+*.export.json
+config.json
+
+# Local databases and state
+
+*.sqlite
+*.sqlite3
+*.db
+
+# Node.js
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+
+**pycache**/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Logs
+
+*.log
+
+# OS files
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / editor
+
+.vscode/
+.idea/
+
+# Temporary files
+
+*.tmp
+*.temp

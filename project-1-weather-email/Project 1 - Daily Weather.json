@@ -1,0 +1,103 @@
+{
+  "name": "Project 1 - Daily Weather",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        16,
+        -112
+      ],
+      "id": "40edca7a-3106-4bec-b141-fc63623fcfb4",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=34.0151&longitude=71.5249&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        256,
+        16
+      ],
+      "id": "cfd41a9f-815d-493c-bce0-373875c4dae8",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "sendTo": "muhammad.techpreneur@gmail.com",
+        "subject": "Daily Weather",
+        "emailType": "text",
+        "message": "=Good Morning! \nthe curent temprature is {{ $json.current.temperature_2m }}   and wind speed is {{ $json.current_units.wind_speed_10m }} and wind spread is {{ $json.current.wind_speed_10m }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        496,
+        144
+      ],
+      "id": "3fded340-7fb4-41a7-a340-7ed9830346ea",
+      "name": "Send a message",
+      "webhookId": "cb0c7a0f-3bcc-4ec4-a646-715583b473b3",
+      "executeOnce": false,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "EyN7woedKG3xbcKf",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "6111d1b0-1c64-4b71-976e-5e24412328d2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "75f1bfa691c079286dd797632dbe21d2c19093c27e964755a77d7b00b21ea8c2"
+  },
+  "nodeGroups": [],
+  "id": "DuumflJtLVLSK0xF",
+  "tags": []
+}

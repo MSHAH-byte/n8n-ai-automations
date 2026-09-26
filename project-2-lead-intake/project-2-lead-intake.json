@@ -1,0 +1,509 @@
+{
+  "name": "project-2-lead-intake",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "sponsor inquiry",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Company Name"
+            },
+            {
+              "fieldLabel": "Contact Name"
+            },
+            {
+              "fieldLabel": "email"
+            },
+            {
+              "fieldLabel": "Website"
+            },
+            {
+              "fieldLabel": "Budget",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "Notes",
+              "fieldType": "textarea"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        -160
+      ],
+      "id": "37a38250-33c2-40de-8cbb-b510249b264d",
+      "name": "On form submission",
+      "webhookId": "e091f8f3-86f1-4e4e-8480-0da8b0120e52"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Budget }}",
+                    "rightValue": 1000000,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lt"
+                    },
+                    "id": "a338c0ee-d095-4f27-96b3-2c77b24e3aca"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Decline "
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6f6f114e-af42-49dc-801a-62c16a63decc",
+                    "leftValue": "={{ $json.Budget }}",
+                    "rightValue": 1000000,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gte"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Approval"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        -160
+      ],
+      "id": "57a832f9-5b5e-4a67-a7eb-bde1aba2175a",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1nR73mAk2x8hLLkUsLzJn-LN-SOZsvKT3Y3k0D-a5weg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Company Name": "={{ $('On form submission').item.json['Company Name'] }}",
+            "Contact Name": "={{ $('On form submission').item.json['Contact Name'] }}",
+            "email": "={{ $('On form submission').item.json.email }}",
+            "Website": "={{ $('On form submission').item.json.Website }}",
+            "Budget": "={{ $('On form submission').item.json.Budget }}",
+            "Notes": "={{ $('On form submission').item.json.Notes }}",
+            "Submitted at": "={{ $('On form submission').item.json.submittedAt }}",
+            "Decision": "Declined"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Contact Name",
+              "displayName": "Contact Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Decision",
+              "displayName": "Decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Submitted at",
+              "displayName": "Submitted at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        640,
+        -256
+      ],
+      "id": "0a2d73ba-df61-4cb8-b96a-47f54df952bf",
+      "name": "Append row in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "e6nPGcW9WO32C1QW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1nR73mAk2x8hLLkUsLzJn-LN-SOZsvKT3Y3k0D-a5weg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Company Name": "={{ $('On form submission').item.json['Company Name'] }}",
+            "Contact Name": "={{ $('On form submission').item.json['Contact Name'] }}",
+            "email": "={{ $('On form submission').item.json.email }}",
+            "Website": "={{ $('On form submission').item.json.Website }}",
+            "Budget": "={{ $('On form submission').item.json.Budget }}",
+            "Notes": "={{ $('On form submission').item.json.Notes }}",
+            "Submitted at": "={{ $('On form submission').item.json.submittedAt }}",
+            "Decision": "Follow Up Sent"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Contact Name",
+              "displayName": "Contact Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Decision",
+              "displayName": "Decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Submitted at",
+              "displayName": "Submitted at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        640,
+        -64
+      ],
+      "id": "c9486657-942d-4111-a1e5-fe6941fcf307",
+      "name": "Append row in sheet1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "e6nPGcW9WO32C1QW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "=Hello  {{ $json['Company Name'] }}",
+        "emailType": "text",
+        "message": "={{ $json['Contact Name'] }}.How dare you waste my time with this nonsense.this budget is insult to my name ",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        -256
+      ],
+      "id": "a17455f4-941e-48ea-8cdf-3a3d2f49e1b4",
+      "name": "Send Deline Message",
+      "webhookId": "fc1c8eed-926d-4f24-8efb-9899268d2e6c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "EyN7woedKG3xbcKf",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "=Hello  {{ $json['Company Name'] }}",
+        "emailType": "text",
+        "message": "={{ $json['Contact Name'] }}.im listening any offer sweaten the deal",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        -64
+      ],
+      "id": "fa5d51ab-489a-4a90-b719-a8028db40525",
+      "name": "Send Approval Message",
+      "webhookId": "fc1c8eed-926d-4f24-8efb-9899268d2e6c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "EyN7woedKG3xbcKf",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "Company Name": "Xai",
+          "Contact Name": "Elon",
+          "email": "muhammadshah1182003@gmail.com",
+          "Website": "xai",
+          "Budget": 50000,
+          "Notes": "dont bother me please\r\n",
+          "submittedAt": "2026-09-25T13:18:30.981-04:00",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Send Deline Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Approval Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Send Deline Message": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Approval Message": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "01ff58af-0b48-4536-9e07-6b94901a6898",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "75f1bfa691c079286dd797632dbe21d2c19093c27e964755a77d7b00b21ea8c2"
+  },
+  "nodeGroups": [],
+  "id": "Fj55u4WWm7W9UkPi",
+  "tags": []
+}

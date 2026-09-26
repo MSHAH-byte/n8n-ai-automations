@@ -1,0 +1,229 @@
+{
+  "name": "project-3-ai-workflow-automation",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "382be16d-fab3-4337-aba4-bbb0d4569b27",
+      "name": "When chat message received",
+      "webhookId": "4cb6c22c-12a6-4b19-b73a-5d704d33d2db"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are my personal AI assistant. Act directly when I ask; do not ask unnecessary confirmation questions or display filler text.\n\nTOOLS YOU CAN USE:\n\n1) Google Calendar (READ-ONLY)\n- Purpose: Check my availability and list scheduled events.\n- Use: Whenever I ask about my schedule, free time, or availability for a specific date or time range.\n- Output: Concise answers summarizing free time slots alongside existing commitments.\n\n2) Gmail (READ-ONLY)\n- Purpose: Read, triage, and summarize recent emails.\n- Use: Whenever I ask about \"latest emails\", \"important emails\", or emails from a specific sender/domain.\n- Output Format:\n  • From:  ()\n  • Subject: \n  • Gist: 1–2 sentence summary\n  • Action items / deadlines (if present)\n\n3) Sponsor Inquiry Tracker (Google Sheets)\n- Purpose: Fetch all rows from the sponsorship tracker sheet.\n- Tool to call: Get_row_s_in_sheet_in_Google_Sheets\n- Use: Whenever the user asks about sponsorship inquiries or requests, run this tool to retrieve the rows and read the data.\n\nGENERAL BEHAVIOR:\n- Be concise, direct, and action-oriented.\n- Do not invent facts. If a tool returns no data, state so clearly.\n- Assume dates and times are in my local timezone unless specified otherwise.\n- When drafting email replies or summaries, present clean, copy-pasteable text.\n\nEXAMPLES OF WHEN TO USE EACH TOOL:\n- \"What does my calendar look like tomorrow?\" -> Check Google Calendar tool.\n- \"Summarize my recent emails.\" -> Check Gmail tool.\n- \"Do we have any new sponsorship requests?\" -> Check Sponsor Inquiry Tracker tool."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "913b420e-9aa7-4b22-85a6-fb437f87d2ea",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {
+          "maxTokensToSample": 800
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        96,
+        224
+      ],
+      "id": "f59fba6f-f984-40bd-9e1c-13bcae103c19",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "AJPfTXoOuDKJw2Gv",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        224
+      ],
+      "id": "6fdb251e-8943-4d7a-8546-e7ca3877436a",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "c_classroombf5a411d@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "BSSE Sim&Mod 2024 BSEE(2022-26)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        368,
+        224
+      ],
+      "id": "0a4801a2-9485-442e-b626-998be8ebd6b8",
+      "name": "Get many events in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "l36TVFYc5NOeUIoo",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        224
+      ],
+      "id": "c36a8f86-f454-4f86-b330-2522aaef1bd8",
+      "name": "Read Email",
+      "webhookId": "2f364c4a-2865-47d3-a142-79c08899a204",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "EyN7woedKG3xbcKf",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1nR73mAk2x8hLLkUsLzJn-LN-SOZsvKT3Y3k0D-a5weg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": []
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        608,
+        208
+      ],
+      "id": "1952c9a3-5e52-4710-889f-1bc80c2c8610",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "e6nPGcW9WO32C1QW",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many events in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8ceef227-9737-4120-b050-b5c0e3157e93",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "75f1bfa691c079286dd797632dbe21d2c19093c27e964755a77d7b00b21ea8c2"
+  },
+  "nodeGroups": [],
+  "id": "yZ3W8MA6m4uwPCKN",
+  "tags": []
+}
