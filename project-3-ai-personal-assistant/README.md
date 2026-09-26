@@ -249,9 +249,6 @@ Instead, the **AI Agent receives the tools and decides when a tool is relevant**
 
 ---
 
-## Workflow Screenshot
-
-![Workflow Screenshot](./workflow.png)
 
 ---
 
